@@ -58,13 +58,7 @@ function draw() {
   let superBigVolume = (vol * 300).toFixed(2);
   let bigVolume = (vol * 100).toFixed(2);
   let mediumVolume = (vol * 80).toFixed(2);
-  let medium2Volume = (vol * 60).toFixed(2);
-  let medium3Volume = (vol * 50).toFixed(2);
-  let medium4Volume = (vol * 40).toFixed(2);
-  let medium5Volume = (vol * 30).toFixed(2);
   let lowVolume = (vol * 20).toFixed(2);
-  let low2Volume = (vol * 10).toFixed(2);
-  let low3Volume = (vol * 8).toFixed(2);
   let diameter = map(vol, 0, 0.3, 100, 200);
 
   // volHistory.push(bigVolume);
@@ -115,42 +109,47 @@ function draw() {
       rect(random(0, windowWidth), random(0, windowHeight), diameter, diameter);
     }
   } else {
-    //POINTS
-    // w 1440 h 737
-    // 720 369.toFixed(2)
-    // 670  319
-    // for (var x = 0; x <= windowWidth; x += 20) {
-    //   for (var y = 0; y <= windowHeight; y += 20) {
-    //     strokeWeight(lowVolume);
-    //     fill(250, 230, 24);
-    //     strokeWeight(mediumVolume);
-    //     ellipse(x, y, 10, 10);
-    //   }
-    // }
+    for (var x = 0; x <= windowWidth; x += 20) {
+      for (var y = 0; y <= windowHeight; y += 20) {
+        // strokeWeight(lowVolume);
+        fill(0);
+        strokeWeight(vol);
+        ellipse(x, y, 8, 8);
+      }
+    }
     r = random(255);
     g = random(100, 200);
     b = random(100);
     a = random(200, 255);
+    circle(windowWidth / 2, windowHeight / 1, windowWidth, superBigVolume);
 
     if (!highPoint) {
       if (reachHighPoint) {
-        stroke(r, g, b, a);
+        stroke(0);
         background(255, 255, 255);
-        fill(255, 255, 255);
+        stroke(r, g, b, a);
       } else {
         stroke(255, 255, 255);
       }
 
       strokeWeight(mediumVolume);
       // stroke(255, 255, 255);
-      ellipse(windowWidth / 2, windowHeight / 2, windowWidth, superBigVolume);
+      ellipse(windowWidth / 2, windowHeight / 2, superBigVolume, lowVolume);
+      circle(windowWidth / 2, windowHeight / 2, superBigVolume, superBigVolume);
+      ellipse(windowWidth / 2, height / 2, diameter, diameter);
     } else {
-      strokeWeight(superBigVolume);
-      // stroke(0);
+      strokeWeight(mediumVolume);
 
-      stroke(r, g, b, a);
-
-      ellipse(windowWidth / 2, windowHeight / 2, windowWidth, superBigVolume);
+      fill(0);
+      background(255, 255, 255);
+      stroke(0);
+      fill(0);
+      circle(windowWidth / 6, windowHeight / random(0, 6), windowWidth / random(0, 3), lowVolume);
+      stroke(0);
+      fill(0);
+      circle(windowWidth, windowHeight / 4, windowWidth / random(0, 3), bigVolume);
+      fill(255, 255, 255);
+      circle(windowWidth / 2, windowHeight / 2, windowWidth / 10, superBigVolume);
     }
   }
 }
