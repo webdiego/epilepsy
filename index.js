@@ -1,4 +1,4 @@
-let song, songDuration, button, amp, img, fs, visual, r, g, b, a;
+let song, songDuration, vol, button, amp, img, fs, visual, r, g, b, a, mic;
 
 let volHistory = [];
 let highPoint = false;
@@ -6,10 +6,10 @@ var playing = false;
 let reachHighPoint = false;
 let currentT;
 let visualization = false;
-let nOFh = [];
+let microphone = true;
 
 function preload() {
-  song = loadSound("./sound/Michael Klein - Dismantled Structure (Dubfire Remix) trim .mp3");
+  song = loadSound("./sound/Frankey & Sandrino - Acamar-trim.mp3");
   img = loadImage("./1.jpeg");
 }
 
@@ -22,8 +22,14 @@ function setup() {
   visual = createButton("change visual");
   visual.position(50, 0);
   visual.mousePressed(toogleVisual);
+  // mic = createButton("mic");
+  // mic.position(170, 0);
+  // mic.mousePressed(toogleMic);
+
   amp = new p5.Amplitude();
   songDuration = song.buffer.duration.toFixed(0);
+  mic = new p5.AudioIn();
+  mic.start();
 }
 
 function tooglePlay() {
@@ -47,6 +53,13 @@ function toogleVisual() {
     visualization = !visualization;
   }
 }
+// function toogleMic() {
+//   if (microphone) {
+//     microphone = !microphone;
+//   } else {
+//     microphone = !microphone;
+//   }
+// }
 // RESPONSIVE CANVAS
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
@@ -54,7 +67,13 @@ function windowResized() {
 
 // DRAW IS A LOOP
 function draw() {
-  let vol = amp.getLevel();
+  if (microphone) {
+    vol = mic.getLevel();
+  } else {
+    vol = amp.getLevel();
+  }
+  console.log(microphone);
+
   let superBigVolume = (vol * 300).toFixed(2);
   let bigVolume = (vol * 100).toFixed(2);
   let mediumVolume = (vol * 80).toFixed(2);
