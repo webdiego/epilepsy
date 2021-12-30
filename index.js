@@ -1,4 +1,4 @@
-let song, songDuration, vol, button, amp, img, fs, visual, r, g, b, a, mic;
+let song, songDuration, vol, button, amp, img, visual, r, g, b, a, mic, FS;
 
 let volHistory = [];
 let highPoint = false;
@@ -6,25 +6,28 @@ var playing = false;
 let reachHighPoint = false;
 let currentT;
 let visualization = false;
+let fs = false;
 let microphone = true;
 
 function preload() {
-  song = loadSound("./sound/Frankey & Sandrino - Acamar-trim.mp3");
+  song = loadSound("./sound/Mark Henning - Exit Acid (feat. Dejan) (Original Mix)-[AudioTrimmer.com].mp3");
   img = loadImage("./1.jpeg");
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  button = createButton("play");
+  button = createButton("Play");
   button.position(0, 0);
   button.mousePressed(tooglePlay);
   button.style("color:white").style("border:none").style("background-color:black");
-  visual = createButton("change visual");
-  visual.position(50, 0);
+  visual = createButton("Change visual");
+  visual.position(0, 20);
   visual.mousePressed(toogleVisual);
-  // mic = createButton("mic");
-  // mic.position(170, 0);
-  // mic.mousePressed(toogleMic);
+  visual.style("color:white").style("border:none").style("background-color:black");
+  FS = createButton("FullScreen");
+  FS.position(0, 40);
+  FS.mousePressed(toogleFS);
+  FS.style("color:white").style("border:none").style("background-color:black");
 
   amp = new p5.Amplitude();
   songDuration = song.buffer.duration.toFixed(0);
@@ -35,17 +38,19 @@ function setup() {
 function tooglePlay() {
   if (!song.isPlaying()) {
     song.play();
-    button.html("pause");
+    button.html("Pause");
     playing = true;
-    // fullscreen(!fs);
   } else {
     song.pause();
-    button.html("play");
+    button.html("Play");
     playing = false;
-    // fullscreen(!fs);
-    // fs = fullscreen();
   }
 }
+function toogleFS() {
+  fs = !fs;
+  fullscreen(!fs);
+}
+
 function toogleVisual() {
   if (visualization) {
     visualization = !visualization;
@@ -53,13 +58,7 @@ function toogleVisual() {
     visualization = !visualization;
   }
 }
-// function toogleMic() {
-//   if (microphone) {
-//     microphone = !microphone;
-//   } else {
-//     microphone = !microphone;
-//   }
-// }
+
 // RESPONSIVE CANVAS
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
@@ -80,7 +79,7 @@ function draw() {
   let lowVolume = (vol * 20).toFixed(2);
   let diameter = map(vol, 0, 0.3, 100, 200);
 
-  // volHistory.push(bigVolume);
+
   bigVolume > 50 ? clear() : background(0, 0, 0);
   bigVolume > 50 ? (highPoint = true) : (highPoint = false);
   if (bigVolume > 50) {
@@ -88,7 +87,7 @@ function draw() {
   }
 
   currentT = +song.currentTime().toFixed(2);
-  console.log(currentT);
+ 
   if (visualization) {
     if (!highPoint) {
       fill(0, 0, 255, 100),
@@ -130,7 +129,7 @@ function draw() {
   } else {
     for (var x = 0; x <= windowWidth; x += 20) {
       for (var y = 0; y <= windowHeight; y += 20) {
-        // strokeWeight(lowVolume);
+        strokeWeight(mediumVolume);
         fill(0);
         strokeWeight(vol);
         ellipse(x, y, 8, 8);
@@ -142,8 +141,8 @@ function draw() {
     a = random(200, 255);
     circle(windowWidth / 2, windowHeight / 1, windowWidth, superBigVolume);
 
-    if (!highPoint) {
-      if (reachHighPoint) {
+    if (!highPoint && bigVolume < 40) {
+      if (reachHighPoint && bigVolume > 60) {
         stroke(0);
         background(255, 255, 255);
         stroke(r, g, b, a);
@@ -160,7 +159,14 @@ function draw() {
       strokeWeight(mediumVolume);
 
       fill(0);
-      background(255, 255, 255);
+      if (bigVolume > 50) {
+        background(145, 72, 223);
+      } else if (bigVolume >= 45 && bigVolume <= 47) {
+        background(224, 224, 227);
+      } else {
+        background(255, 255, 255);
+      }
+
       stroke(0);
       fill(0);
       circle(windowWidth / 6, windowHeight / random(0, 6), windowWidth / random(0, 3), lowVolume);
