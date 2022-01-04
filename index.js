@@ -11,15 +11,28 @@ let fs = false;
 let microphone = false;
 
 function preload() {
-  song = loadSound("./sound/Emanuel Satie - Come As You Are.mp3");
+  song = loadSound("./sound/Michael Klein - Dismantled Structure (Dubfire Remix) trim .mp3");
+}
+let techno = false;
+if (confirm("Cancel: Your music 😎  ↔️  OK: Techno👽 ")) {
+  alert("👽");
+  techno = true;
+} else {
+  alert("😎");
+  techno = false;
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  button = createButton("Play");
-  button.position(0, 10);
-  button.mousePressed(tooglePlay);
-  button.style("color:white").style("border:none").style("background-color:black");
+  MIC = new p5.AudioIn();
+  if (techno) {
+    button = createButton("Play");
+    button.position(0, 10);
+    button.mousePressed(tooglePlay);
+    button.style("color:white").style("border:none").style("background-color:black");
+  } else {
+    MIC.start();
+  }
   visual = createButton("Change visual");
   visual.position(0, 30);
   visual.mousePressed(toogleVisual);
@@ -33,9 +46,8 @@ function setup() {
   // m.mousePressed(toogleMic);
   // m.style("color:white").style("border:none").style("background-color:black");
   songDuration = song.buffer.duration.toFixed(0);
+  song.stop();
 
-  MIC = new p5.AudioIn();
-  MIC.start();
   AMP = new p5.Amplitude();
 }
 
@@ -45,7 +57,7 @@ function tooglePlay() {
     button.html("Pause");
     playing = true;
   } else {
-    song.pause();
+    song.stop();
     button.html("Play");
     playing = false;
   }
@@ -66,8 +78,10 @@ function toogleMic() {
   microphone = !microphone;
 
   if (microphone) {
+    MIC.start();
     m.html("Mic on");
   } else {
+    MIC.stop();
     m.html("Mic off");
   }
 }
@@ -79,12 +93,13 @@ function windowResized() {
 // DRAW IS A LOOP
 
 function draw() {
-  // vol = AMP.getLevel();
-  // if (microphone) {
-  vol = MIC.getLevel();
-  // }
-  // vol = AMP.getLevel();
-  console.log(vol, microphone);
+  if (!techno) {
+    vol = MIC.getLevel();
+  }
+  if (techno) {
+    vol = AMP.getLevel();
+  }
+  console.log(MIC.enabled);
   let superBigVolume = (vol * 300).toFixed(2);
   let bigVolume = (vol * 100).toFixed(2);
   let mediumVolume = (vol * 80).toFixed(2);
@@ -101,19 +116,16 @@ function draw() {
 
   if (visualization) {
     if (!highPoint) {
-      fill(0, 0, 255, 100),
-
-     strokeWeight(mediumVolume),
-     stroke(29, 205, 196);
+      fill(0, 0, 255, 100), strokeWeight(mediumVolume), stroke(29, 205, 196);
       line(0, windowHeight, 200, 0);
       line(0, windowHeight / 2, windowWidth, windowHeight / 2), stroke(56, 10, 164);
       line(0, windowHeight / 2, windowWidth, windowHeight / 2), stroke(58, 58, 164);
-      line(0, 0, windowWidth, windowHeight / 2)
+      line(0, 0, windowWidth, windowHeight / 2);
 
       strokeWeight(lowVolume);
       stroke(19, 159, 204);
       line(0, 0, windowWidth / 2, windowHeight / 2), stroke(29, 205, 196);
-      line(windowWidth / 2, 0, windowWidth, windowHeight / 2)
+      line(windowWidth / 2, 0, windowWidth, windowHeight / 2);
 
       strokeWeight(lowVolume);
       stroke(28, 78, 171);
@@ -126,8 +138,7 @@ function draw() {
 
       stroke(44, 109, 231);
       line(windowWidth / 2, windowHeight, windowWidth / 2.6, windowHeight / 2),
-      strokeWeight(bigVolume);
-     
+        strokeWeight(bigVolume);
     }
 
     if (highPoint) {
