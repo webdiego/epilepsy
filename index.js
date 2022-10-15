@@ -1,4 +1,4 @@
-let song, songDuration, vol, button, visual, r, g, b, a, FS;
+let song, songDuration, vol, button, visual, buttonStop, r, g, b, a, FS;
 let MIC;
 let AMP;
 let volHistory = [];
@@ -11,80 +11,63 @@ let fs = false;
 let microphone = false;
 
 function preload() {
-  song = loadSound("./sound/Michael Klein - Dismantled Structure (Dubfire Remix) trim .mp3");
-}
-let techno = false;
-if (confirm("Cancel: Your music 😎  ↔️  OK: Techno👽 ")) {
-  alert("👽");
-  techno = true;
-} else {
-  alert("😎");
-  techno = false;
+  song = loadSound('./sound/[SUARA450]Augusto Taito-Peoplear(Original Mix).mp3');
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   MIC = new p5.AudioIn();
-  if (techno) {
-    button = createButton("Play");
-    button.position(0, 10);
-    button.mousePressed(tooglePlay);
-    button.style("color:white").style("border:none").style("background-color:black");
-  } else {
-    MIC.start();
-  }
-  visual = createButton("Change visual");
-  visual.position(0, 30);
-  visual.mousePressed(toogleVisual);
-  visual.style("color:white").style("border:none").style("background-color:black");
-  FS = createButton("FullScreen");
-  FS.position(0, 50);
-  FS.mousePressed(toogleFS);
-  FS.style("color:white").style("border:none").style("background-color:black");
-  // m = createButton("Mic off");
-  // m.position(0, 70);
-  // m.mousePressed(toogleMic);
-  // m.style("color:white").style("border:none").style("background-color:black");
+
+  button = createButton('Play');
+  button.position(0, 10);
+  button.mousePressed(togglePlay);
+  button.style('color:white').style('border:none').style('background-color:black');
+
+  buttonStop = createButton('Stop');
+  buttonStop.position(0, 30);
+  buttonStop.mousePressed(() => song.stop());
+  buttonStop.style('color:white').style('border:none').style('background-color:black');
+
+  visual = createButton('Change visual');
+  visual.position(0, 50);
+  visual.mousePressed(toggleVisual);
+  visual.style('color:white').style('border:none').style('background-color:black');
+
+  FS = createButton('FullScreen');
+  FS.position(0, 70);
+  FS.mousePressed(toggleFS);
+  FS.style('color:white').style('border:none').style('background-color:black');
+
   songDuration = song.buffer.duration.toFixed(0);
   song.stop();
 
   AMP = new p5.Amplitude();
 }
 
-function tooglePlay() {
+function togglePlay() {
   if (!song.isPlaying()) {
     song.play();
-    button.html("Pause");
+    button.html('Pause');
     playing = true;
   } else {
-    song.stop();
-    button.html("Play");
+    song.pause();
+    button.html('Play');
     playing = false;
   }
 }
-function toogleFS() {
+function toggleFS() {
   fs = !fs;
   fullscreen(fs);
 }
 
-function toogleVisual() {
+function toggleVisual() {
   if (visualization) {
     visualization = !visualization;
   } else {
     visualization = !visualization;
   }
 }
-function toogleMic() {
-  microphone = !microphone;
 
-  if (microphone) {
-    MIC.start();
-    m.html("Mic on");
-  } else {
-    MIC.stop();
-    m.html("Mic off");
-  }
-}
 // RESPONSIVE CANVAS
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
@@ -93,12 +76,8 @@ function windowResized() {
 // DRAW IS A LOOP
 
 function draw() {
-  if (!techno) {
-    vol = MIC.getLevel();
-  }
-  if (techno) {
-    vol = AMP.getLevel();
-  }
+  vol = AMP.getLevel();
+
   console.log(MIC.enabled);
   let superBigVolume = (vol * 300).toFixed(2);
   let bigVolume = (vol * 100).toFixed(2);
