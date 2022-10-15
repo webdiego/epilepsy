@@ -39,7 +39,11 @@ function setup() {
   FS.style('color:white').style('border:none').style('background-color:black');
 
   songDuration = song.buffer.duration.toFixed(0);
-  song.stop();
+  console.log('songDuration');
+  song.onended(() => {
+    song.stop();
+    button.html('Play');
+  });
 
   AMP = new p5.Amplitude();
 }
@@ -55,6 +59,7 @@ function togglePlay() {
     playing = false;
   }
 }
+
 function toggleFS() {
   fs = !fs;
   fullscreen(fs);
